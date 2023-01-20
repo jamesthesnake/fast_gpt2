@@ -1,6 +1,6 @@
 # fast_gpt2
 
-#THIS IS NOT PRODUCTION READY NOR EVEN CORRECT (right now)
+#THIS IS NOT PRODUCTION READY NOR EVEN CORRECT (right now) (for now)
 
 ## Use
 ```
