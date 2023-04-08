@@ -3,6 +3,10 @@ name = "fast_gpt2"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "fast_gpt2"
+path = "src/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -11,12 +15,38 @@ futures-util = "0.3.25"
 matrixmultiply = {version = "0.3.2", features= ["threading"]}
 memmap2 = "0.5"
 reqwest = { version = "0.11", features = ["stream"] }
-safetensors = { git = "https://github.com/huggingface/safetensors", branch="forcing_alignment" }
+safetensors = "0.3"
 thiserror = "1.0"
-tokenizers = {version = "0.13.2", default-features=false, features=["onig"] }
+tokenizers = { git = "https://github.com/huggingface/tokenizers", branch="main", default-features=false, features=["onig"] }
 tokio = { version = "1.23.0", features = ["rt-multi-thread", "macros"] }
 cblas-sys = { version = "0.1.4", default-features = false, optional = true }
+blas = { version = "0.22", default-features = false, optional = true }
+blas-src = { version = "0.7", default-features = false, optional = true }
 libc = { version = "0.2", default-features = false, optional = true }
+tracing-subscriber = "0.3.16"
+axum = "0.6.3"
+tracing = "0.1.37"
+serde = { version = "1.0.152", features = ["serde_derive"] }
+tower-http = { version = "0.3.5", features = ["trace"] }
+serde_json = "1.0.91"
+dfdx = { git = "https://github.com/Narsil/dfdx", branch="fast_gpt2", optional= true, default-features=false, features=["safetensors"] }
+cudarc = { git = "https://github.com/coreylowman/cudarc", optional=true }
+smelt = { git = "https://github.com/Narsil/smelt" }
+lazy_static = "1.4.0"
 
 [features]
+default = ["gpt2"]
 cblas = ["dep:cblas-sys", "dep:libc"]
+blas = ["dep:blas"]
+blas_mkl = ["blas", "blas-src/intel-mkl"]
+accelerate = ["blas-src/accelerate"]
+intel-mkl = ["cblas"]
+dfdx_intel = ["dfdx/intel-mkl"]
+dfdx_nightly = ["dfdx/nightly"]
+cuda = ["dfdx/cuda", "dep:cudarc"]
+gpt2 = []
+gpt2-medium = []
+gpt2-large = []
+
+[profile.release]
+lto = true
